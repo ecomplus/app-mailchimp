@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.0.0 (2020-05-17)
+
+
+### Features
+
+* **mailchimp:** api client ([c7c9b97](https://github.com/ecomplus/application-starter/commit/c7c9b9761e2362054025174cecc6a320541dab8f))
+* **routes:** customers resource ([95e0779](https://github.com/ecomplus/application-starter/commit/95e07792087248f9a9893e50c998f116d883ecc6))
+* **routes:** products resource ([8fb4fc1](https://github.com/ecomplus/application-starter/commit/8fb4fc157d5549398c33393b04b1f4cd61b3668a))
+* **routes:** store resource ([22a30e6](https://github.com/ecomplus/application-starter/commit/22a30e6bfc4b39d9c6d340372bda41cc28a96b4d))
+* **webhook:** handler for triggers in products, customers and carts ([e3f91b8](https://github.com/ecomplus/application-starter/commit/e3f91b86a80b4e67902a48a5be57e6fb8b90acd7))
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#1](https://github.com/ecomplus/application-starter/issues/1)) ([54d5416](https://github.com/ecomplus/application-starter/commit/54d54163cc657f42d9267fa9e57551e4fc9d6136))
+* **deps:** using eslint v6 (node 8 support) ([1d2fd9d](https://github.com/ecomplus/application-starter/commit/1d2fd9d090151fbbc129fddaa3d5891f059460f8))
+
 ## [1.0.0-starter.11](https://github.com/ecomplus/application-starter/compare/v1.0.0-starter.10...v1.0.0-starter.11) (2020-04-27)
 
 
