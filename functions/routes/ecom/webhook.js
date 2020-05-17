@@ -1,3 +1,5 @@
+/* eslint-disable promise/no-nesting */
+/* eslint-disable no-case-declarations */
 // read configured E-Com Plus app data
 const getAppData = require('./../../lib/store-api/get-app-data')
 
@@ -5,6 +7,9 @@ const SKIP_TRIGGER_NAME = 'SkipTrigger'
 const ECHO_SUCCESS = 'SUCCESS'
 const ECHO_SKIP = 'SKIP'
 const ECHO_API_ERROR = 'STORE_API_ERR'
+const newCart = require('../../lib/mailchimp/new-carts')
+const newProduct = require('../../lib/mailchimp/new-product')
+const newCustomer = require('../../lib/mailchimp/new-customer')
 
 exports.post = ({ appSdk }, req, res) => {
   // receiving notification from Store API
@@ -20,20 +25,42 @@ exports.post = ({ appSdk }, req, res) => {
   getAppData({ appSdk, storeId })
 
     .then(appData => {
-      if (
-        Array.isArray(appData.ignore_triggers) &&
-        appData.ignore_triggers.indexOf(trigger.resource) > -1
-      ) {
-        // ignore current trigger
-        const err = new Error()
+      if (!appData.mc_api_key) {
+        const err = new Error('Mailchimp ApiKey not setted, skip trigger.')
         err.name = SKIP_TRIGGER_NAME
         throw err
       }
 
-      /* DO YOUR CUSTOM STUFF HERE */
+      const { resource } = trigger
+      let promise = Promise.resolve()
+      switch (resource) {
+        case 'carts':
+          const cartId = trigger.inserted_id
+          promise = newCart(cartId, storeId, appSdk, appData)
+          break;
+        case 'products':
+          promise = appSdk
+            .apiRequest(storeId, '/stores/me')
+            .then(({ response }) => {
+              const storeData = response.data
+              const productBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
+              return newProduct(productBody, storeData, storeId, appData, appSdk)
+            })
+          break;
+        case 'customers':
+          const customerBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
+          promise = newCustomer(customerBody, storeId, appData)
+          break;
+        default:
+          break;
+      }
 
-      // all done
-      res.send(ECHO_SUCCESS)
+      return promise
+    })
+
+    .then(() => {
+      console.log(`Trigger in ${trigger.resource} for #${storeId} successful`)
+      return res.send(ECHO_SUCCESS)
     })
 
     .catch(err => {
@@ -41,9 +68,18 @@ exports.post = ({ appSdk }, req, res) => {
         // trigger ignored by app configuration
         res.send(ECHO_SKIP)
       } else {
-        // console.error(err)
         // request to Store API with error response
         // return error status code
+        console.error(`[X] Trigger in ${trigger.resource} for #${storeId} failed`)
+        const { response } = err
+        if (response.data && response.data.errors) {
+          console.error('[!] INFO: ', JSON.stringify(response.data.errors, undefined, 2))
+        }
+
+        if (response.data && response.data.detail) {
+          console.error('[!] DETAIL: ', response.data.detail)
+        }
+
         res.status(500)
         const { message } = err
         res.send({
