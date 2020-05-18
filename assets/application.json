@@ -1,7 +1,7 @@
 {
   "app_id": 126944,
-  "title": "My Awesome E-Com Plus App",
-  "slug": "my-awesome-ecom-plus-app",
+  "title": "Mailchimp",
+  "slug": "mailchimp",
   "type": "external",
   "state": "active",
   "authentication": true,
@@ -13,12 +13,20 @@
     "procedures": [
       "POST"
     ],
-    "products": [],
+    "products": [
+      "GET"
+    ],
     "brands": [],
     "categories": [],
-    "customers": [],
-    "orders": [],
-    "carts": [],
+    "customers": [
+      "GET"
+    ],
+    "orders": [
+      "GET"
+    ],
+    "carts": [
+      "GET"
+    ],
     "orders/fulfillments": [],
     "orders/payments_history": [],
     "products/quantity": [],
@@ -26,6 +34,33 @@
     "products/price": [],
     "products/variations/price": []
   },
+  "admin_settings": {
+    "mc_api_key": {
+      "schema": {
+        "type": "string",
+        "maxLength": 255,
+        "title": "Mailchimp Api Key",
+        "description": "Public Key disponível em https://mailchimp.com/pt/help/about-api-keys/"
+      },
+      "hide": true
+    },
+    "mc_store_id": {
+      "schema": {
+        "type": "string",
+        "maxLength": 255,
+        "title": "Mailchimp Store Id"
+      },
+      "hide": false
+    },
+    "mc_store_list": {
+      "schema": {
+        "type": "string",
+        "maxLength": 255,
+        "title": "Lista específica para vincular a loja"
+      },
+      "hide": false
+    }
+  },
   "auth_callback_uri": "https://us-central1-ecom-mailchimp.cloudfunctions.net/app/ecom/auth-callback",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
