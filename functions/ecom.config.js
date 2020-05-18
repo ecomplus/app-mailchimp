@@ -135,6 +135,34 @@ const app = {
      * You can also set any other valid resource/subresource combination.
      * Ref.: https://developers.e-com.plus/docs/api/#/store/
      */
+  },
+
+  admin_settings: {
+    mc_api_key: {
+      schema: {
+        type: 'string',
+        maxLength: 255,
+        title: 'Mailchimp Api Key',
+        description: 'Public Key disponível em https://mailchimp.com/pt/help/about-api-keys/'
+      },
+      hide: true
+    },
+    mc_store_id: {
+      schema: {
+        type: 'string',
+        maxLength: 255,
+        title: 'Mailchimp Store Id'
+      },
+      hide: false
+    },
+    mc_store_list: {
+      schema: {
+        type: 'string',
+        maxLength: 255,
+        title: 'Lista específica para vincular a loja'
+      },
+      hide: false
+    }
   }
 }
 
