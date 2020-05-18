@@ -11,7 +11,7 @@ const fbConfig = {}
 
 if (process.env.NODE_ENV === 'dev' && process.env.SERVICE_ACCOUNT_KEY) {
   const serviceAccount = require(process.env.SERVICE_ACCOUNT_KEY)
-  fbConfig.databaseURL = 'https://ecom-mailchimp-b4f0f.firebaseio.com'
+  fbConfig.databaseURL = 'https://ecom-mailchimp.firebaseio.com'
   fbConfig.credential = admin.credential.cert(serviceAccount)
 }
 
@@ -22,6 +22,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const server = express()
 const router = express.Router()
+const cors = require('cors')
 const routes = './routes'
 
 // enable/disable some E-Com common routes based on configuration
@@ -33,7 +34,7 @@ const { ecomServerIps, setup } = require('@ecomplus/application-sdk')
 
 server.use(bodyParser.urlencoded({ extended: false }))
 server.use(bodyParser.json())
-
+server.use(cors())
 server.use((req, res, next) => {
   if (req.url.startsWith('/ecom/')) {
     // get E-Com Plus Store ID from request header
