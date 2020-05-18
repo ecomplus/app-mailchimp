@@ -151,7 +151,8 @@ const app = {
       schema: {
         type: 'string',
         maxLength: 255,
-        title: 'Mailchimp Store Id'
+        title: 'Mailchimp Store Id',
+        description: 'Pode ser verificado ou criado em Avançado'
       },
       hide: false
     },
@@ -159,7 +160,8 @@ const app = {
       schema: {
         type: 'string',
         maxLength: 255,
-        title: 'Lista específica para vincular a loja'
+        title: 'Mailchimp Store List',
+        description: 'Lista que será vinculada a store, pode ser gerado em Avançado'
       },
       hide: false
     }
