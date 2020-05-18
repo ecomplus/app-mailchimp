@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/ecomplus/application-starter/compare/v1.0.1...v1.1.0) (2020-05-18)
+
+
+### Features
+
+* **routes:** lists resource ([29f99bb](https://github.com/ecomplus/application-starter/commit/29f99bb6bf0e4560aede943a2cac381e61bd2f86))
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([1c7849c](https://github.com/ecomplus/application-starter/commit/1c7849cd5399a514e76a50eb14679bb1fdfec2ce))
+
 ### [1.0.1](https://github.com/ecomplus/application-starter/compare/v1.0.0...v1.0.1) (2020-05-18)
 
 ## 1.0.0 (2020-05-17)
