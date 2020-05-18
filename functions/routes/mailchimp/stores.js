@@ -2,6 +2,7 @@
 // read configured E-Com Plus app data
 const getAppData = require('../../lib/store-api/get-app-data')
 const Mailchimp = require('../../lib/mailchimp/client')
+const newList = require('../../lib/mailchimp/new-list')
 
 exports.post = ({ appSdk }, req, res) => {
   const storeId = parseInt(req.get('X-Store-Id') || req.store_id, 10)
@@ -33,33 +34,10 @@ exports.post = ({ appSdk }, req, res) => {
       if (!listId) {
         try {
           // todo
-          const list = await mailchimp.post({
-            path: '/lists',
-            data: {
-              name: 'E-Com Plus ShopSync',
-              contact: {
-                company: store.corporate_name,
-                address1: store.address,
-                city: '',
-                state: '',
-                zip: '',
-                country: ''
-              },
-              permission_reminder: store.name,
-              campaign_defaults: {
-                from_name: store.name,
-                from_email: store.financial_email,
-                language: 'Português', // todo en/pt-br
-                subject: store.name
-              },
-              email_type_option: false,
-              visibility: 'pub',
-              double_optin: false
-            }
-          }).then(({ data }) => data)
+          const list = await newList()
           listId = list.id
         } catch (error) {
-          console.log()
+          console.log('Create list error', error.message)
           throw error
         }
       }
@@ -136,11 +114,11 @@ exports.get = ({ appSdk }, req, res) => {
     })
 
     .then(({ data }) => {
-      let result = []
-      if (data.total_items >= 0 && data.stores.length) {
-        result = data.stores
+      const resp = {
+        total: data.total_items,
+        results: data.stores
       }
-      return res.send(result)
+      return res.send(resp)
     })
 
     .catch(error => {
