@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/ecomplus/application-starter/compare/v1.1.0...v1.1.1) (2020-05-18)
+
+
+### Bug Fixes
+
+* enabled cors ([5ce66cb](https://github.com/ecomplus/application-starter/commit/5ce66cbb34288c9ba23085de4a2f4f981ee90f60))
+
 ## [1.1.0](https://github.com/ecomplus/application-starter/compare/v1.0.1...v1.1.0) (2020-05-18)
 
 
