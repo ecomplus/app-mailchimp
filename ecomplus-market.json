@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "",
-    "short_description": "",
-    "category": "tools"
+    "title": "Mailchimp",
+    "short_description": "Com o aplicativo instalado é possível enviar produtos, carrinhos e clientes para o Mailchimp",
+    "category": "marketing"
   }
 }
