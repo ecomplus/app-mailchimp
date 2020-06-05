@@ -7,7 +7,7 @@ const newList = require('../../lib/mailchimp/new-list')
 exports.post = ({ appSdk }, req, res) => {
   const storeId = parseInt(req.get('X-Store-Id') || req.store_id, 10)
 
-  getAppData({ appSdk, storeId })
+  getAppData({ appSdk, storeId }, true)
 
     .then(configObj => {
 

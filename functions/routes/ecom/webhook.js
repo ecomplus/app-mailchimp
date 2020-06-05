@@ -22,7 +22,7 @@ exports.post = ({ appSdk }, req, res) => {
   const trigger = req.body
 
   // get app configured options
-  getAppData({ appSdk, storeId })
+  getAppData({ appSdk, storeId }, true)
 
     .then(appData => {
       if (!appData.mc_api_key) {

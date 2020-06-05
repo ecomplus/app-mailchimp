@@ -7,7 +7,7 @@ const createOrUpdate = require('../../lib/mailchimp/new-product')
 
 exports.post = ({ appSdk }, req, res) => {
   const storeId = parseInt(req.get('X-Store-Id') || req.query.store_id, 10)
-  getAppData({ appSdk, storeId })
+  getAppData({ appSdk, storeId }, true)
 
     .then(configObj => {
 
