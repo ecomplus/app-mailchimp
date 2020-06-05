@@ -23,8 +23,6 @@ exports.post = ({ appSdk }, req, res) => {
     })
 
     .then(async ({ response, configObj }) => {
-      res.status(200)
-
       const { result } = response.data
       if (result.length) {
         const store = await appSdk
@@ -59,7 +57,7 @@ exports.post = ({ appSdk }, req, res) => {
           })
       }
 
-      return res.end()
+      return res.status(200).end()
     })
 
     .catch(error => {
