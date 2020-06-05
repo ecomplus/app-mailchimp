@@ -48,8 +48,14 @@ exports.post = ({ appSdk }, req, res) => {
             })
           break;
         case 'customers':
-          const customerBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
-          promise = newCustomer(customerBody, storeId, appData)
+          // const customerBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
+          // promise = newCustomer(customerBody, storeId, appData)
+          promise = appSdk
+            .apiRequest(storeId, `/customers/${trigger.inserted_id}.json`)
+            .then(({ response }) => {
+              const customerData = response.data
+              return newCustomer(customerData, storeId, appData)
+            })
           break;
         default:
           break;
@@ -77,7 +83,7 @@ exports.post = ({ appSdk }, req, res) => {
         }
 
         if (response.data && response.data.detail) {
-          console.error('[!] DETAIL: ', response.data.detail)
+          console.error('[!] DETAIL: ', response.data)
         }
 
         res.status(500)

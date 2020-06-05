@@ -33,7 +33,11 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
                 id: randomObjectId(),
                 url: normal.url
               })
-              data.image_url = normal.url
+
+              // save first image has default
+              if (!data.image_url) {
+                data.image_url = normal.url
+              }
             }
           })
         }
@@ -77,10 +81,10 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
             })
           })
 
-          .then(() => {
-            const resp = `Update product ${productBody._id} | #${storeId}`
-            console.log(resp)
-            return resolve(resp)
+          .then(({ data }) => {
+            //const resp = `Update product ${productBody._id} | #${storeId}`
+            //console.log(resp)
+            return resolve(data)
           })
 
           .catch(error => {
@@ -94,7 +98,7 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
                   path: `/ecommerce/stores/${configObj.mc_store_id}/products`,
                   data
                 }).then(resp => {
-                  console.log(`Create new product ${productBody._id} | #${storeId}`)
+                  //console.log(`Create new product ${productBody._id} | #${storeId}`)
                   return resolve(resp)
                 }).catch(reject)
               } else {

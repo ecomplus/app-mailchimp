@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/no-nesting */
 // read configured E-Com Plus app data
@@ -10,8 +11,8 @@ exports.post = ({ appSdk }, req, res) => {
 
     .then(configObj => {
 
-      if (!configObj.mc_api_key) {
-        const error = new Error('Missing mc_api_key in application.data')
+      if (!configObj.mc_api_key || !configObj.mc_store_id) {
+        const error = new Error('mc_api_key or mc_store_id not setted, check your application config.')
         error.code = 'Unauthorized'
         throw error
       }
@@ -32,17 +33,20 @@ exports.post = ({ appSdk }, req, res) => {
 
         let promises = []
         for (let i = 0; i < result.length; i++) {
-          const product = result[i];
-          const promise = createOrUpdate(product, store, storeId, configObj, appSdk)
+          const promise = createOrUpdate(result[i], store, storeId, configObj, appSdk)
+            .then(() => {
+              console.log(`Product ${result[i]._id} sync successfully | #${storeId}`)
+            })
+            .catch(err => {
+              console.error(`Product ${result[i]._id} sync failed | #${storeId}`, err)
+            })
           promises.push(promise)
         }
 
-        // const promises = result.map(product => createOrUpdate(product, store, configObj))
         Promise
           .all(promises)
           .then(resp => {
-            console.log('THEN')
-            console.log(resp)
+            console.log('Sync end for ', storeId)
           })
           .catch(err => {
             console.log(err)

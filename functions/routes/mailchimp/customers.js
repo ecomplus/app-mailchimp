@@ -9,9 +9,8 @@ exports.post = ({ appSdk }, req, res) => {
   getAppData({ appSdk, storeId })
 
     .then(configObj => {
-      console.log(configObj)
-      if (!configObj.mc_api_key) {
-        const error = new Error('Missing mc_api_key in application.hidden_data')
+      if (!configObj.mc_api_key || !configObj.mc_store_id) {
+        const error = new Error('mc_api_key or mc_store_id not setted, check your application config.')
         error.code = 'Unauthorized'
         throw error
       }
