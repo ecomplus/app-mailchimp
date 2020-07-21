@@ -22,12 +22,13 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
           description: product.short_description || name,
           images: [],
           published_at_foreign: new Date(),
-          variants: []
+          variants: [],
+          image_url: ''
         }
 
         // product img
         if (pictures && pictures.length) {
-          pictures.forEach(({ _id, normal }) => {
+          pictures.forEach(({ normal }) => {
             if (normal && normal.url) {
               data.images.push({
                 id: randomObjectId(),
@@ -35,7 +36,7 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
               })
 
               // save first image has default
-              if (!data.image_url) {
+              if (data.image_url === '') {
                 data.image_url = normal.url
               }
             }
@@ -118,7 +119,7 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
             const { data } = response
             console.error('! MailchimpErr: ', data.detail)
             if (data.errors) {
-              console.log(JSON.stringify(data.errors))
+              console.error(JSON.stringify(data.errors))
             }
           }
         }
