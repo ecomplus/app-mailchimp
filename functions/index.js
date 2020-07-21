@@ -7,15 +7,8 @@ const recursiveReadDir = require('./lib/recursive-read-dir')
 // Firebase SDKs to setup cloud functions and access Firestore database
 const admin = require('firebase-admin')
 const functions = require('firebase-functions')
-const fbConfig = {}
 
-if (process.env.NODE_ENV === 'dev' && process.env.SERVICE_ACCOUNT_KEY) {
-  const serviceAccount = require(process.env.SERVICE_ACCOUNT_KEY)
-  fbConfig.databaseURL = 'https://ecom-mailchimp.firebaseio.com'
-  fbConfig.credential = admin.credential.cert(serviceAccount)
-}
-
-admin.initializeApp(fbConfig)
+admin.initializeApp()
 
 // web server with Express
 const express = require('express')
@@ -115,8 +108,13 @@ recursiveReadDir(routesDir).filter(filepath => filepath.endsWith('.js')).forEach
         // debug ecomAuth processes and ensure enable token updates by default
         process.env.ECOM_AUTH_DEBUG = 'true'
         process.env.ECOM_AUTH_UPDATE = 'enabled'
+        const isRefreshTokens = filename.startsWith('/ecom/refresh-tokens')
+        if (isRefreshTokens) {
+          console.log('Updating E-Com Plus access tokens')
+        }
+
         // setup ecomAuth client with Firestore instance
-        setup(null, true, admin.firestore()).then(appSdk => {
+        setup(null, !isRefreshTokens, admin.firestore()).then(appSdk => {
           middleware({ appSdk, admin }, req, res)
         }).catch(err => {
           console.error(err)
