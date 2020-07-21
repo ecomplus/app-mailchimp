@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.7](https://github.com/ecomplus/application-starter/compare/v1.1.6...v1.1.7) (2020-07-21)
+
+
+### Bug Fixes
+
+* **auth-callback:** check `row.setted_up` in place of 'settep_up' ([7fdc307](https://github.com/ecomplus/application-starter/commit/7fdc307a8fd1963d73d54c9f80b43c58e9b7fb8a))
+* **new-customer:** enabled receive newsletter ([1466ffe](https://github.com/ecomplus/application-starter/commit/1466ffef5975a5169354d4e9f01409b73d7ebc7e))
+* **new-customer:** enabled receive newsletter ([ca3fe7d](https://github.com/ecomplus/application-starter/commit/ca3fe7de0721f29d176f32fab40ca6b37ade74a8))
+* **new-product.js:** save first image as default ([7a94dee](https://github.com/ecomplus/application-starter/commit/7a94dee38bb64dac4d08d701f890c21017a27a4c))
+
 ### [1.1.6](https://github.com/ecomplus/application-starter/compare/v1.1.5...v1.1.6) (2020-06-05)
 
 
