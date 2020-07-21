@@ -13,7 +13,7 @@ module.exports = (customerBody, storeId, configObj, queue = 1) => {
       const data = {
         id: customerId,
         email_address: customerBody.main_email,
-        opt_in_status: false,
+        opt_in_status: true,
         first_name: customerBody.display_name
       }
 
