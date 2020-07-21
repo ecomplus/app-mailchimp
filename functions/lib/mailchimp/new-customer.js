@@ -13,7 +13,7 @@ module.exports = (customerBody, storeId, configObj, queue = 1) => {
       const data = {
         id: customerId,
         email_address: customerBody.main_email,
-        opt_in_status: true,
+        opt_in_status: (customerBody.accepts_marketing), // https://community.e-com.plus/t/mailchimp-funcionamento/362/10?u=talisson
         first_name: customerBody.display_name
       }
 
