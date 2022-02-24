@@ -10,7 +10,7 @@ if (!MARKET_TOKEN) {
 const path = require('path')
 const fs = require('fs')
 const https = require('https')
-const { baseUri } = require('./_constants')
+const { hostingUri } = require('./_constants')
 const { app } = require('../ecomplus-market.json')
 const storeApp = require('../assets/application.json')
 
@@ -26,12 +26,12 @@ app.store_app = storeApp
   }
 })
 
-const dirPublic = path.resolve(__dirname, '../functions/public')
-if (fs.existsSync(path.resolve(dirPublic, 'icon.png'))) {
-  app.icon = `${baseUri}icon.png`
+const dirHosting = path.resolve(__dirname, '../hosting')
+if (fs.existsSync(path.resolve(dirHosting, 'icon.png'))) {
+  app.icon = `${hostingUri}icon.png`
 }
 try {
-  app.description = fs.readFileSync(path.resolve(dirPublic, 'description.md'), 'utf8')
+  app.description = fs.readFileSync(path.resolve(dirHosting, 'description.md'), 'utf8')
 } catch (e) {
   app.description = `
 # ${app.title}
@@ -52,16 +52,22 @@ const req = https.request({
     Authorization: `Bearer ${MARKET_TOKEN}`
   }
 }, res => {
-  const { statusCode } = res
-  if (statusCode >= 200 && statusCode <= 204) {
-    console.log('Application updated')
-  } else {
-    console.error(new Error(`API request error with status ${statusCode}`))
-    process.exit(1)
-  }
+  const body = []
+  res.on('data', chunk => {
+    body.push(chunk)
+  })
 
-  res.on('data', d => {
-    process.stdout.write(d)
+  res.on('end', () => {
+    const { statusCode } = res
+    if (body.length) {
+      console.log('Response:', Buffer.concat(body).toString())
+    }
+    if (statusCode >= 200 && statusCode <= 204) {
+      console.log('Application updated')
+    } else {
+      console.error(new Error(`API request error with status ${statusCode}`))
+      process.exit(1)
+    }
   })
 })
 
