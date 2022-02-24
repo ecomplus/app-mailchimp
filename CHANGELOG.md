@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.9](https://github.com/ecomplus/app-mailchimp/compare/v1.1.8...v1.1.9) (2022-02-24)
+
+
+### Bug Fixes
+
+* **deps:** remove (old) axios from direct deps ([20a4d6b](https://github.com/ecomplus/app-mailchimp/commit/20a4d6bca1a546232e8adbdb94fb5c158793a8b2))
+* updating to starter 26 and sdk 22.0.0-firestore.1.15.6 ([cc6804d](https://github.com/ecomplus/app-mailchimp/commit/cc6804d0ab61b88c8ccf1375b3562cefec3cd246))
+
 ### [1.1.8](https://github.com/ecomplus/application-starter/compare/v1.1.7...v1.1.8) (2020-11-05)
 
 
