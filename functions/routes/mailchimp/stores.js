@@ -114,6 +114,7 @@ exports.get = ({ appSdk }, req, res) => {
     })
 
     .then(({ data }) => {
+      console.log('Return list stores', JSON.stringify(data))
       const resp = {
         total: data.total_items,
         results: data.stores
