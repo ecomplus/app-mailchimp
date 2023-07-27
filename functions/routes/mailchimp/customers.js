@@ -16,7 +16,7 @@ exports.post = ({ appSdk }, req, res) => {
       }
 
       const url = '/customers.json?limit=1000&offset=0' +
-        '&fields=_id,email,name,display_name,orders_count,total_spent,main_email'
+        '&fields=_id,email,name,display_name,orders_count,total_spent,main_email,accepts_marketing'
       return appSdk
         .apiRequest(storeId, url)
         .then(({ response }) => ({ response, configObj }))
