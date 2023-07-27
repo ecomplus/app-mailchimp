@@ -187,13 +187,19 @@ procedures.push({
       action: 'create'
     },
 
-    // Receive notifications when cart is edited:
+    // Receive notifications when cart is created:
     {
       resource: 'carts',
       action: 'create',
     },
 
-    // Receive notifications when customer is deleted:
+    // Receive notifications when order is created:
+    {
+      resource: 'orders',
+      action: 'create',
+    },
+
+    // Receive notifications when customer is created:
     {
       resource: 'customers',
       action: 'create',

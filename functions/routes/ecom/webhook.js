@@ -8,6 +8,7 @@ const ECHO_SUCCESS = 'SUCCESS'
 const ECHO_SKIP = 'SKIP'
 const ECHO_API_ERROR = 'STORE_API_ERR'
 const newCart = require('../../lib/mailchimp/new-carts')
+const newOrder = require('../../lib/mailchimp/new-order')
 const newProduct = require('../../lib/mailchimp/new-product')
 const newCustomer = require('../../lib/mailchimp/new-customer')
 
@@ -37,6 +38,10 @@ exports.post = ({ appSdk }, req, res) => {
         case 'carts':
           const cartId = trigger.inserted_id
           promise = newCart(cartId, storeId, appSdk, appData)
+          break;
+        case 'orders':
+          const cartId = trigger.inserted_id
+          promise = newOrder(cartId, storeId, appSdk, appData)
           break;
         case 'products':
           promise = appSdk
