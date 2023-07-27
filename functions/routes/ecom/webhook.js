@@ -40,8 +40,8 @@ exports.post = ({ appSdk }, req, res) => {
           promise = newCart(cartId, storeId, appSdk, appData)
           break;
         case 'orders':
-          const cartId = trigger.inserted_id
-          promise = newOrder(cartId, storeId, appSdk, appData)
+          const orderId = trigger.inserted_id
+          promise = newOrder(orderId, storeId, appSdk, appData)
           break;
         case 'products':
           promise = appSdk
