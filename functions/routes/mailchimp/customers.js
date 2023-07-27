@@ -29,13 +29,19 @@ exports.post = ({ appSdk }, req, res) => {
         for (let i = 0; i < result.length; i++) {
           const customers = result[i];
           const promise = createOrUpdate(customers, storeId, configObj, i)
+          .then(() => {
+            console.log(`Customer ${result[i]._id} sync successfully | #${storeId}`)
+          })
+          .catch(err => {
+            console.error(`Customer ${result[i]._id} sync failed | #${storeId}`, err)
+          })
           promises.push(promise)
         }
 
         Promise
           .all(promises)
           .then(resp => {
-            console.log('THEN')
+            console.log('send customers end')
             console.log(resp)
           })
           .catch(err => {
