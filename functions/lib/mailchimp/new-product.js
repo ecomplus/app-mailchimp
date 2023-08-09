@@ -49,7 +49,7 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
             data.variants.push({
               id: variation._id,
               title: variation.name,
-              url: (variation.sku ? `${homepage}/${variation.sku}` : `${homepage}/${product.sku}`),
+              url: `${homepage}/${product.slug}?variation_id=${variation._id}`,
               sku: variation.sku,
               price: variation.price || product.price,
               inventory_quantity: variation.quantity || 0,
@@ -61,7 +61,7 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
           data.variants.push({
             id: product._id,
             title: product.name,
-            url: `${homepage}/${product.sku}`,
+            url: `${homepage}/${product.slug}`,
             sku: product.sku,
             price: product.price || product.price,
             inventory_quantity: product.quantity || 0,

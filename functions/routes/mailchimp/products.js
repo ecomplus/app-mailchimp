@@ -8,9 +8,7 @@ const createOrUpdate = require('../../lib/mailchimp/new-product')
 exports.post = ({ appSdk }, req, res) => {
   const storeId = parseInt(req.get('X-Store-Id') || req.query.store_id, 10)
   getAppData({ appSdk, storeId }, true)
-
     .then(configObj => {
-
       if (!configObj.mc_api_key || !configObj.mc_store_id) {
         const error = new Error('mc_api_key or mc_store_id not setted, check your application config.')
         error.code = 'Unauthorized'
