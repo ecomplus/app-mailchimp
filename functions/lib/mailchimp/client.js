@@ -41,6 +41,13 @@ class Mailchimp {
       data
     })
   }
+
+  delete ({ path }) {
+    return this.request({
+      method: 'delete',
+      url: path
+    })
+  }
 }
 
 module.exports = Mailchimp

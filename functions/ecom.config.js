@@ -192,6 +192,11 @@ procedures.push({
       resource: 'carts',
       action: 'create',
     },
+    // Receive notifications when changes completed status inside cart:
+    {
+      resource: 'carts',
+      field: 'completed',
+    },
 
     // Receive notifications when order is created:
     {

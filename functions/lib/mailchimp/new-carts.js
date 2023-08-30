@@ -16,9 +16,9 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
           customer: {
             id: customerId
           },
-          checkout_url: '/app/#/checkout/' + cartId,
+          checkout_url: cartBody.permalink || '/app/#/checkout/' + cartId,
           currency_code: 'BRL',
-          order_total: 0,
+          order_total: cartBody.subtotal || 0,
           lines: []
         }
 
@@ -33,16 +33,48 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
               price: item.final_price || item.price,
               product_variant_id: item.variation_id || item.product_id
             })
-
-            data.order_total += (item.final_price || item.price)
+            if (data.order_total === 0) {
+              data.order_total += (item.final_price || item.price)
+            }
           })
         }
 
         const mailchimp = new Mailchimp(configObj.mc_api_key)
-        return mailchimp.post({
-          path: `/ecommerce/stores/${storeId}/carts`,
-          data
-        })
+        mailchimp.get({
+          path: `/ecommerce/stores/${storeId}/carts/${cartId}`,
+        }).then(resp => {
+            if (cartBody.completed) {
+              mailchimp.delete({
+                path: `/ecommerce/stores/${storeId}/carts/${cartId}`,
+              }).then(response => {
+                console.log(`Deleted completed cart status: ${cartBody.completed} - ${cartId} - ${storeId}`)
+                return resolve(response)
+              })
+            }
+            return resolve(resp)
+          })
+          .catch(error => {
+            // not found
+            // not exist
+            // create new cart
+            if (error.response) {
+              const { response } = error
+              if (response.status && response.status === 404) {
+                mailchimp.post({
+                  path: `/ecommerce/stores/${storeId}/carts`,
+                  data
+                }).then(resp => {
+                  console.log(`Create new cart ${cartBody._id} | #${storeId}`)
+                  return resolve(resp)
+                }).catch(reject)
+              } else if (response.status && response.status === 400) {
+                // email adress 
+                reject(response)
+              }
+            } else {
+              reject(error)
+            }
+          })
       })
       .then(resolve)
       .catch(reject)
