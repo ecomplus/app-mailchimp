@@ -35,7 +35,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
       .apiRequest(storeId, url)
       .then(({ response }) => {
         const orderBody = response.data
-        const customer = orderBody.buyers[0]
+        const customer = orderBody.buyers && orderBody.buyers[0]
 
         const addressTo = orderBody.shipping_lines && orderBody.shipping_lines.length && orderBody.shipping_lines[0].to
 
@@ -54,6 +54,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
           order_total: orderBody.amount && orderBody.amount.total,
           discount_total: orderBody.amount && orderBody.amount.discount,
           shipping_total: orderBody.amount && orderBody.amount.freight,
+          order_url: orderBody.status_link || orderBody.checkout_link,
           lines: [],
           shipping_address: {
             name: addressTo.name,
@@ -62,6 +63,10 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
             province: addressTo.province_code,
             postal_code: addressTo.zip
           }
+        }
+
+        if (configObj.mc_campaign_order) {
+          data.campaign_id = configObj.mc_campaign_order
         }
 
         const { items } = orderBody
@@ -80,10 +85,40 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
         }
 
         const mailchimp = new Mailchimp(configObj.mc_api_key)
-        return mailchimp.post({
-          path: `/ecommerce/stores/${storeId}/orders`,
-          data
-        })
+
+        mailchimp.get({
+          path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
+        }).then(resp => {
+            mailchimp.patch({
+              path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
+              data
+            }).then(response => {
+              console.log(`Update order data: ${orderId} - ${storeId}`)
+              return resolve(response)
+            })
+          })
+          .catch(error => {
+            // not found
+            // not exist
+            // create new order
+            if (error.response) {
+              const { response } = error
+              if (response.status && response.status === 404) {
+                mailchimp.post({
+                  path: `/ecommerce/stores/${storeId}/orders`,
+                  data
+                }).then(resp => {
+                  console.log(`Create new order ${orderBody._id} | #${storeId}`)
+                  return resolve(resp)
+                }).catch(reject)
+              } else if (response.status && response.status === 400) {
+                // email adress 
+                reject(response)
+              }
+            } else {
+              reject(error)
+            }
+          })
       })
       .then(resolve)
       .catch(reject)

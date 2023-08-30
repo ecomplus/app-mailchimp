@@ -24,6 +24,10 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
 
         const { items } = cartBody
 
+        if (configObj.mc_campaign_cart) {
+          data.campaign_id = configObj.mc_campaign_cart
+        }
+
         if (items.length) {
           items.forEach(item => {
             data.lines.push({

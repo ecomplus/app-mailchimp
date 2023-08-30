@@ -164,6 +164,24 @@ const app = {
         description: 'Lista que será vinculada a store, pode ser gerado em Avançado'
       },
       hide: false
+    },
+    mc_campaign_cart: {
+      schema: {
+        type: 'string',
+        maxLength: 255,
+        title: 'Id da campanha para carrinho (opcional)',
+        description: 'Caso utilize uma campanha específica para carrinhos, preencha com o id da campanha'
+      },
+      hide: false
+    },
+    mc_campaign_order: {
+      schema: {
+        type: 'string',
+        maxLength: 255,
+        title: 'Id da campanha para pedido (opcional)',
+        description: 'Caso utilize uma campanha específica para pedidos, preencha com o id da campanha'
+      },
+      hide: false
     }
   }
 }
@@ -198,10 +216,10 @@ procedures.push({
       field: 'completed',
     },
 
-    // Receive notifications when order is created:
+    // Receive notifications when order change status:
     {
       resource: 'orders',
-      action: 'create',
+      field: 'financial_status',
     },
 
     // Receive notifications when customer is created:
