@@ -74,7 +74,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
               // create new cart
               if (error.response) {
                 const { response } = error
-                if (response.status && response.status === 404 && !cartBody.completed) {
+                if (response.status && response.status === 404 && !(cartBody.completed)) {
                   mailchimp.post({
                     path: `/ecommerce/stores/${storeId}/carts`,
                     data
@@ -84,10 +84,10 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                   }).catch(err => {
                       const { response } = err
                       if (response.data && response.data.errors) {
-                        console.error('[!] INFO cart: ', JSON.stringify(response.data.errors, undefined, 2))
+                        console.error('[!] INFO cart: ', storeId, JSON.stringify(response.data.errors, undefined, 2))
                       }
                       if (response.data && response.data.detail) {
-                        console.error('[!] DETAIL cart: ', response.data)
+                        console.error('[!] DETAIL cart: ', storeId, response.data)
                       }
                       reject(err)
                     })
