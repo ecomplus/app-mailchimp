@@ -110,13 +110,16 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
                 }).then(resp => {
                   console.log(`Create new order ${orderBody._id} | #${storeId}`)
                   return resolve(resp)
-                }).catch(err => {
+                }).catch(err => { 
                   const { response } = err
+                  if (storeId == 51292) {
+                    console.log('Error at store #51292', response)
+                  }
                   if (response.data && response.data.errors) {
-                    console.error('[!] INFO order: ', JSON.stringify(response.data.errors, undefined, 2))
+                    console.error('[!] INFO order: ', storeId, JSON.stringify(response.data.errors, undefined, 2))
                   }
                   if (response.data && response.data.detail) {
-                    console.error('[!] DETAIL order: ', response.data)
+                    console.error('[!] DETAIL order: ', storeId, response.data)
                   }
                   reject(err)
                 })

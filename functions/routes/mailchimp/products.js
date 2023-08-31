@@ -27,19 +27,17 @@ exports.post = ({ appSdk }, req, res) => {
           .apiRequest(storeId, '/stores/me.json')
           .then(({ response }) => response.data)
 
-        let promises = []
+        // const promises = []
         for (let i = 0; i < result.length; i++) {
-          const promise = createOrUpdate(result[i], store, storeId, configObj, appSdk)
-            .then(() => {
-              console.log(`Product ${result[i]._id} sync successfully | #${storeId}`)
-            })
-            .catch(err => {
-              console.error(`Product ${result[i]._id} sync failed | #${storeId}`, err)
-            })
-          promises.push(promise)
+          try {
+            const response = await createOrUpdate(result[i], store, storeId, configObj, appSdk)
+            console.log(`Product ${result[i]._id} sync successfully | #${storeId}`)
+          } catch (err) {
+            console.error(`Product ${result[i]._id} sync failed | #${storeId}`, err)
+          }
         }
 
-        Promise
+        /* Promise
           .all(promises)
           .then(resp => {
             console.log('Sync end for ', storeId)
@@ -52,7 +50,7 @@ exports.post = ({ appSdk }, req, res) => {
                 console.error('[x] MailchimpRequestErr: ', response.data.detail)
               }
             }
-          })
+          }) */
       }
 
       return res.status(200).end()

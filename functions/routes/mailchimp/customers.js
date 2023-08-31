@@ -6,6 +6,7 @@ const createOrUpdate = require('../../lib/mailchimp/new-customer')
 
 exports.post = ({ appSdk }, req, res) => {
   const storeId = parseInt(req.get('X-Store-Id') || req.query.store_id, 10)
+  const customers = []
   getAppData({ appSdk, storeId }, true)
 
     .then(configObj => {
@@ -15,30 +16,44 @@ exports.post = ({ appSdk }, req, res) => {
         throw error
       }
 
-      const url = '/customers.json?limit=1000&offset=0' +
-        '&fields=_id,email,name,display_name,orders_count,total_spent,main_email,accepts_marketing'
-      return appSdk
-        .apiRequest(storeId, url)
-        .then(({ response }) => ({ response, configObj }))
-    })
+      const getAllCustomers = (offset = 0) => {
+        appSdk.apiRequest(storeId, `/customers.json?limit=1000&offset=${offset}&fields=_id,email,name,display_name,orders_count,total_spent,main_email,accepts_marketing`)
+        .then(({ response }) => {
+          if (response && response.data && response.data.result && response.data.result.length) {
+            customers.push(response.data.result)
+            if (response.data.result.length < 1000) {
+              return (customers, configObj)
+            }
+            getAllCustomers(offset + 1000)
+          }
+        })
+      }
+      getAllCustomers()
 
-    .then(async ({ response, configObj }) => {
-      const { result } = response.data
+    })
+    .then(async (customers, configObj) => {
+      const result = customers
       if (result.length) {
         let promises = []
         for (let i = 0; i < result.length; i++) {
-          const customers = result[i];
-          const promise = createOrUpdate(customers, storeId, configObj, i)
-          .then(() => {
+          const customer = result[i];
+          try {
+            await createOrUpdate(customer, storeId, configObj, i)
             console.log(`Customer ${result[i]._id} sync successfully | #${storeId}`)
+          } catch (err) {
+            console.error(`Customer ${result[i]._id} sync failed | #${storeId}`, err)
+          }
+/*           const promise = 
+          .then(() => {
+            console.log()
           })
           .catch(err => {
-            console.error(`Customer ${result[i]._id} sync failed | #${storeId}`, err)
+            
           })
-          promises.push(promise)
+          promises.push(promise) */
         }
 
-        Promise
+        /* Promise
           .all(promises)
           .then(resp => {
             console.log('send customers end')
@@ -54,7 +69,7 @@ exports.post = ({ appSdk }, req, res) => {
                 console.error('[x] Details: ', JSON.stringify(response.data.errors, undefined, 2))
               }
             }
-          })
+          }) */
       }
 
       return res.status(200).end()
