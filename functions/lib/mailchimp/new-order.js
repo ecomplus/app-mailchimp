@@ -110,7 +110,16 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
                 }).then(resp => {
                   console.log(`Create new order ${orderBody._id} | #${storeId}`)
                   return resolve(resp)
-                }).catch(reject)
+                }).catch(err => {
+                  const { response } = err
+                  if (response.data && response.data.errors) {
+                    console.error('[!] INFO order: ', JSON.stringify(response.data.errors, undefined, 2))
+                  }
+                  if (response.data && response.data.detail) {
+                    console.error('[!] DETAIL order: ', response.data)
+                  }
+                  reject(err)
+                })
               } else if (response.status && response.status === 400) {
                 // email adress 
                 reject(response)

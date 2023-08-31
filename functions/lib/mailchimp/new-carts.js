@@ -73,10 +73,10 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                 }).catch(err => {
                     const { response } = err
                     if (response.data && response.data.errors) {
-                      console.error('[!] INFO: ', JSON.stringify(response.data.errors, undefined, 2))
+                      console.error('[!] INFO cart: ', JSON.stringify(response.data.errors, undefined, 2))
                     }
                     if (response.data && response.data.detail) {
-                      console.error('[!] DETAIL: ', response.data)
+                      console.error('[!] DETAIL cart: ', response.data)
                     }
                     reject(err)
                   })
