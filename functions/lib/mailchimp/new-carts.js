@@ -63,7 +63,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
             // create new cart
             if (error.response) {
               const { response } = error
-              if (response.status && response.status === 404) {
+              if (response.status && response.status === 404 && !cartBody.completed) {
                 mailchimp.post({
                   path: `/ecommerce/stores/${storeId}/carts`,
                   data
@@ -84,6 +84,8 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                   // email adress 
                   reject(response)
               }
+              console.log('Skipping completed cart', cartBody.completed)
+              reject(response)
             } else {
               reject(error)
             }
