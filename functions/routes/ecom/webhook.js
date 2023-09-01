@@ -81,7 +81,7 @@ exports.post = ({ appSdk }, req, res) => {
       } else {
         // request to Store API with error response
         // return error status code
-        console.error(`[X] Trigger in ${trigger.resource} for #${storeId} failed`)
+        console.error(`[X] Trigger in ${trigger.resource} for #${storeId} failed`, err)
         const { response } = err
         if (response.data && response.data.errors) {
           console.error('[!] INFO: ', JSON.stringify(response.data.errors, undefined, 2))
