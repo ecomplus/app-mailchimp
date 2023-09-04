@@ -34,14 +34,19 @@ exports.post = ({ appSdk }, req, res) => {
 
       const { resource } = trigger
       let promise = Promise.resolve()
+      console.log('Log trigger:', JSON.stringify(trigger))
       switch (resource) {
         case 'carts':
           const cartId = trigger.inserted_id
-          promise = newCart(cartId, storeId, appSdk, appData)
+          if (cartId) {
+            promise = newCart(cartId, storeId, appSdk, appData)
+          }
           break;
         case 'orders':
           const orderId = trigger.inserted_id
-          promise = newOrder(orderId, storeId, appSdk, appData)
+          if (orderId) {
+            promise = newOrder(orderId, storeId, appSdk, appData)
+          }
           break;
         case 'products':
           promise = appSdk

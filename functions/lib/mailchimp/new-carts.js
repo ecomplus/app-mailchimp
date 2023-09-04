@@ -94,9 +94,10 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                 } else if (response.status && response.status === 400) {
                     // email adress 
                     reject(response)
+                } else {
+                  console.log('Skipping completed cart', storeId, cartId, cartBody.completed)
+                  reject(response)
                 }
-                console.log('Skipping completed cart', storeId, cartId, cartBody.completed)
-                reject(response)
               } else {
                 reject(error)
               }
