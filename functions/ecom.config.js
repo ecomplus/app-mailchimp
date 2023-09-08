@@ -182,6 +182,42 @@ const app = {
         description: 'Caso utilize uma campanha específica para pedidos, preencha com o id da campanha'
       },
       hide: false
+    },
+    customer_tag: {
+      schema: {
+        title: 'Filtro de clientes por tag',
+        description: 'Para suas automações, utilize tags para filtrar usuários',
+        type: 'array',
+        maxItems: 4,
+        items: {
+          title: 'Serviço de entrega',
+          type: 'object',
+          required: [
+            'tag_type',
+            'tag_name'
+          ],
+          properties: {
+            tag_type: {
+              type: 'string',
+              title: 'Tipo da tag',
+              enum: [
+                'carrinho aberto',
+                'carrinho completado',
+                'pedido aberto',
+                'pedido pago',
+                'pedido cancelado'
+              ]
+            },
+            tag_name: {
+              type: 'string',
+              maxLength: 50,
+              title: 'Nome da tag',
+              description: 'Mesmo nome da tag inserida no mailchimp'
+            }
+          }
+        }
+      },
+      hide: true
     }
   }
 }

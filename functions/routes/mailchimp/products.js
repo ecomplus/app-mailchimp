@@ -30,8 +30,9 @@ exports.post = ({ appSdk }, req, res) => {
         // const promises = []
         for (let i = 0; i < result.length; i++) {
           try {
+            console.log('Sending:', result.length)
             const response = await createOrUpdate(result[i], store, storeId, configObj, appSdk)
-            console.log(`Product ${result[i]._id} sync successfully | #${storeId}`)
+            console.log(`Product ${result[i]._id} sync successfully | #${storeId}`, response.data)
           } catch (err) {
             console.error(`Product ${result[i]._id} sync failed | #${storeId}`, err)
           }

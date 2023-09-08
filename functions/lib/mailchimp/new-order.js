@@ -2,27 +2,37 @@
 'use strict'
 const { lineAddress } = require('@ecomplus/utils')
 const Mailchimp = require('./client')
+const parseTag = require('./parse-tag')
 
 const financialStatus = (status) => {
   switch (status.current) {
     case 'paid':
     case 'authorized':
       return 'paid'
-      break;
     case 'under_analysis':
     case 'pending':
     case 'partially_paid':
       return 'pending'
-      break;
     case 'voided':
     case 'unauthorized':
       return 'cancelled'
-      break;
     case 'in_dispute':
     case 'refunded':
     case 'partially_refunded':
       return 'refunded'
+    default: 'pending'
       break;
+  }
+}
+
+const tagStatus = (status) => {
+  switch (status) {
+    case 'paid':
+      return 'closed_order'
+    case 'pending':
+      return 'open_order'
+    case 'cancelled':
+      return 'canceled_order'
     default: 'pending'
       break;
   }
@@ -35,10 +45,10 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
       .apiRequest(storeId, url)
       .then(({ response }) => {
         const orderBody = response.data
+        const financialStatus = financialStatus(orderBody.financial_status)
+        const tag = tagStatus(financialStatus)
         const customer = orderBody.buyers && orderBody.buyers[0]
-
         const addressTo = orderBody.shipping_lines && orderBody.shipping_lines.length && orderBody.shipping_lines[0].to
-
         const data = {
           id: orderId,
           customer: {
@@ -49,7 +59,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
             last_name: customer.name && customer.name.family_name
           },
           store_id: String(storeId),
-          financial_status: financialStatus(orderBody.financial_status),
+          financial_status: financialStatus,
           currency_code: 'BRL',
           order_total: orderBody.amount && orderBody.amount.total,
           discount_total: orderBody.amount && orderBody.amount.discount,
@@ -80,7 +90,6 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
               price: item.final_price || item.price,
               product_variant_id: item.variation_id || item.product_id
             })
-
           })
         }
 
@@ -89,25 +98,43 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
         mailchimp.get({
           path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
         }).then(resp => {
-            mailchimp.patch({
-              path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
-              data
-            }).then(response => {
-              console.log(`Update order data: ${orderId} - ${storeId}`)
-              return resolve(response)
-            })
+          const promises = []
+          promises.push(mailchimp.patch({
+            path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
+            data
+          }))
+          const tagName = parseTag(tag, configObj.customer_tag)
+          if (tagName) {
+            promises.push(mailchimp.post({
+              path: `/lists/${configObj.mc_store_list}/members/${md5(customer.main_email)}/tags`,
+              data: {"tags": [{"name": tagName, "status": "active"}]}
+            }))
+          }
+          return Promise.all(promises).then(response => {
+            console.log(`Update order data: ${orderId} - ${storeId}`)
+            return resolve(response)
           })
-          .catch(error => {
+        })
+        .catch(error => {
             // not found
             // not exist
             // create new order
             if (error.response) {
               const { response } = error
               if (response.status && response.status === 404) {
-                mailchimp.post({
+                const promises = []
+                promises.push(mailchimp.post({
                   path: `/ecommerce/stores/${storeId}/orders`,
                   data
-                }).then(resp => {
+                }))
+                const tagName = parseTag(tag, configObj.customer_tag)
+                if (tagName) {
+                  promises.push(mailchimp.post({
+                    path: `/lists/${configObj.mc_store_list}/members/${md5(customer.main_email)}/tags`,
+                    data: {"tags": [{"name": tagName, "status": "active"}]}
+                  }))
+                }
+                return Promise.all(promises).then(resp => {
                   console.log(`Create new order ${orderBody._id} | #${storeId}`)
                   return resolve(resp)
                 }).catch(err => { 

@@ -1,6 +1,8 @@
 /* eslint-disable promise/catch-or-return */
 'use strict'
+const md5 = require('md5')
 const Mailchimp = require('./client')
+const parseTag = require('./parse-tag')
 
 module.exports = (cartId, storeId, appSdk, configObj) => {
   return new Promise((resolve, reject) => {
@@ -59,11 +61,23 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
               path: `/ecommerce/stores/${storeId}/carts/${cartId}`,
             }).then(resp => {
                 if (cartBody.completed) {
-                  mailchimp.delete({
+                  const promises = []
+                  promises.push(mailchimp.delete({
                     path: `/ecommerce/stores/${storeId}/carts/${cartId}`,
-                  }).then(response => {
+                  }))
+                  const tagName = parseTag('closed_cart', configObj.customer_tag)
+                  if (tagName) {
+                    promises.push(mailchimp.post({
+                      path: `/lists/${configObj.mc_store_list}/members/${md5(customerData.main_email)}/tags`,
+                      data: {"tags": [{"name": tagName, "status": "inactive"}]}
+                    }))
+                  }
+                  return Promise.all(promises).then(response => {
                     console.log(`Deleted completed cart status: ${cartBody.completed} - ${cartId} - ${storeId}`)
                     return resolve(response)
+                  }).catch(error =>{
+                    console.log(error)
+                    return reject(error)
                   })
                 }
                 return resolve(resp)
@@ -75,22 +89,22 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
               if (error.response) {
                 const { response } = error
                 if (response.status && response.status === 404 && !(cartBody.completed)) {
-                  mailchimp.post({
+                  const promises = []
+                  promises.push(mailchimp.post({
                     path: `/ecommerce/stores/${storeId}/carts`,
                     data
-                  }).then(resp => {
-                      console.log(`Create new cart ${cartBody._id} | #${storeId}`)
-                      return resolve(resp)
-                  }).catch(err => {
-                      const { response } = err
-                      if (response.data && response.data.errors) {
-                        console.error('[!] INFO cart: ', storeId, JSON.stringify(response.data.errors, undefined, 2))
-                      }
-                      if (response.data && response.data.detail) {
-                        console.error('[!] DETAIL cart: ', storeId, response.data)
-                      }
-                      reject(err)
-                    })
+                  }))
+                  const tagName = parseTag('open_cart', configObj.customer_tag)
+                  if (tagName) {
+                    promises.push(mailchimp.post({
+                      path: `/lists/${configObj.mc_store_list}/members/${md5(customerData.main_email)}/tags`,
+                      data: {"tags": [{"name": tagName, "status": "active"}]}
+                    }))
+                  }
+                  return Promise.all(promises).then(resp => {
+                    console.log('Created cart', resp)
+                    return resolve(resp)
+                  }).catch(console.error)
                 } else if (response.status && response.status === 400) {
                     // email adress 
                     reject(response)
@@ -104,7 +118,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
             })
           })
         }
-        resolve(response)
+        return resolve(response)
       })
       .then(resolve)
       .catch(reject)
