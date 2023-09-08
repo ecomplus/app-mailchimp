@@ -60,6 +60,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
             mailchimp.get({
               path: `/ecommerce/stores/${storeId}/carts/${cartId}`,
             }).then(resp => {
+              console.log('Cart exists', cartId, resp.data)
                 if (cartBody.completed) {
                   const promises = []
                   promises.push(mailchimp.delete({
