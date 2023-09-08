@@ -18,6 +18,5 @@ module.exports = (resourceType, rules) => {
             break
     }
     const bestRule = rules.find(rule => rule.tag_type === configStatus)
-    const tagName = bestRule && bestRule.tag_name || null
-    return { tagName  }
+    return bestRule && bestRule.tag_name || null
 }
