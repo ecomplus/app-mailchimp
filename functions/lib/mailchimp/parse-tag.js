@@ -1,4 +1,4 @@
-export default (resourceType, rules) => {
+module.exports = (resourceType, rules) => {
     let configStatus
     switch (resourceType) {
         case 'canceled_order':
