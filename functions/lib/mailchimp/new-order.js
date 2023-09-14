@@ -45,8 +45,8 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
       .apiRequest(storeId, url)
       .then(({ response }) => {
         const orderBody = response.data
-        const financialStatus = financialStatus(orderBody.financial_status)
-        const tag = tagStatus(financialStatus)
+        const paymentStatus = financialStatus(orderBody.financial_status)
+        const tag = tagStatus(paymentStatus)
         const customer = orderBody.buyers && orderBody.buyers[0]
         const addressTo = orderBody.shipping_lines && orderBody.shipping_lines.length && orderBody.shipping_lines[0].to
         const data = {
@@ -98,6 +98,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
         mailchimp.get({
           path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
         }).then(resp => {
+          console.log('get order', resp)
           const promises = []
           promises.push(mailchimp.patch({
             path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
@@ -119,6 +120,9 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
             // not found
             // not exist
             // create new order
+            if (storeId == 51292) {
+              console.log('Error #51292', response)
+            }
             if (error.response) {
               const { response } = error
               if (response.status && response.status === 404) {

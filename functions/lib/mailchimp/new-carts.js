@@ -87,6 +87,9 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
               // not found
               // not exist
               // create new cart
+              if (storeId == 51292) {
+                console.log(error)
+              }
               if (error.response) {
                 const { response } = error
                 if (response.status && response.status === 404 && !(cartBody.completed)) {
@@ -103,7 +106,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                     }))
                   }
                   return Promise.all(promises).then(resp => {
-                    console.log('Created cart', resp)
+                    console.log('Created cart', JSON.stringify(resp.data))
                     return resolve(resp)
                   }).catch(console.error)
                 } else if (response.status && response.status === 400) {
