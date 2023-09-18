@@ -5,7 +5,7 @@ const Mailchimp = require('./client')
 const parseTag = require('./parse-tag')
 
 const financialStatus = (status) => {
-  switch (status.current) {
+  switch (status) {
     case 'paid':
     case 'authorized':
       return 'paid'
@@ -45,7 +45,8 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
       .apiRequest(storeId, url)
       .then(({ response }) => {
         const orderBody = response.data
-        const paymentStatus = financialStatus(orderBody.financial_status)
+        const statusCurrent = orderBody.financial_status && orderBody.financial_status.current
+        const paymentStatus = financialStatus(statusCurrent)
         const tag = tagStatus(paymentStatus)
         const customer = orderBody.buyers && orderBody.buyers[0]
         const addressTo = orderBody.shipping_lines && orderBody.shipping_lines.length && orderBody.shipping_lines[0].to
@@ -88,7 +89,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
               product_id: item.product_id,
               quantity: item.quantity,
               price: item.final_price || item.price,
-              product_variant_id: item.variation_id || item.product_id
+              product_variant_id: item.product_id
             })
           })
         }

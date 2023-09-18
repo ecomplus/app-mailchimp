@@ -48,7 +48,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                   product_id: item.product_id,
                   quantity: item.quantity,
                   price: item.final_price || item.price,
-                  product_variant_id: item.variation_id || item.product_id
+                  product_variant_id: item.product_id
                 })
                 if (data.order_total === 0) {
                   data.order_total += (item.final_price || item.price)
