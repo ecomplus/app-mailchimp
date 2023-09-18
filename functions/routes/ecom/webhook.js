@@ -34,7 +34,7 @@ exports.post = ({ appSdk }, req, res) => {
 
       const { resource } = trigger
       let promise = Promise.resolve()
-      console.log('Log trigger:', trigger.inserted_id, resource)
+      console.log('Log trigger:', trigger.inserted_id, resource, JSON.stringify(trigger))
       switch (resource) {
         case 'carts':
           const cartId = trigger.inserted_id
