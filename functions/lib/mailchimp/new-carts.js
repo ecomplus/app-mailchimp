@@ -88,7 +88,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
               // not exist
               // create new cart
               if (storeId == 51292) {
-                console.log(error)
+                console.log(error.response)
               }
               if (error.response) {
                 const { response } = error
@@ -108,7 +108,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                   return Promise.all(promises).then(resp => {
                     console.log('Created cart', JSON.stringify(resp.data))
                     return resolve(resp)
-                  }).catch(console.error)
+                  }).catch(err => console.log(err.response))
                 } else if (response.status && response.status === 400) {
                     // email adress 
                     reject(response)
