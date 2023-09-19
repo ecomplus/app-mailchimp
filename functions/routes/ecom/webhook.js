@@ -37,13 +37,13 @@ exports.post = ({ appSdk }, req, res) => {
       console.log('Log trigger:', trigger.inserted_id, resource, JSON.stringify(trigger))
       switch (resource) {
         case 'carts':
-          const cartId = trigger.inserted_id
+          const cartId = trigger.inserted_id || trigger.resource_id
           if (cartId) {
             promise = newCart(cartId, storeId, appSdk, appData)
           }
           break;
         case 'orders':
-          const orderId = trigger.inserted_id
+          const orderId = trigger.inserted_id || trigger.resource_id
           if (orderId) {
             promise = newOrder(orderId, storeId, appSdk, appData)
           }

@@ -89,7 +89,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
               product_id: item.product_id,
               quantity: item.quantity,
               price: item.final_price || item.price,
-              product_variant_id: item.product_id
+              product_variant_id: item.variation_id || item.product_id
             })
           })
         }
@@ -99,7 +99,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
         mailchimp.get({
           path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
         }).then(resp => {
-          console.log('get order', resp)
+          console.log('get order', resp.response)
           const promises = []
           promises.push(mailchimp.patch({
             path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
@@ -145,7 +145,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
                 }).catch(err => { 
                   const { response } = err
                   if (storeId == 51292) {
-                    console.log('Error at store #51292', response)
+                    console.log('Error at store #51292', response.status, response.detail, JSON.stringify(response.errors))
                   }
                   if (response.data && response.data.errors) {
                     console.error('[!] INFO order: ', storeId, JSON.stringify(response.data.errors, undefined, 2))

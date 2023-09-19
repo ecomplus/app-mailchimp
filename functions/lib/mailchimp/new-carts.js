@@ -48,7 +48,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                   product_id: item.product_id,
                   quantity: item.quantity,
                   price: item.final_price || item.price,
-                  product_variant_id: item.product_id
+                  product_variant_id: item.variation_id || item.product_id
                 })
                 if (data.order_total === 0) {
                   data.order_total += (item.final_price || item.price)
@@ -92,6 +92,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
               }
               if (error.response) {
                 const { response } = error
+                console.log(`#${storeId} error to get`, response.status, response.detail)
                 if (response.status && response.status === 404 && !(cartBody.completed)) {
                   const promises = []
                   promises.push(mailchimp.post({
@@ -108,7 +109,10 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                   return Promise.all(promises).then(resp => {
                     console.log('Created cart', JSON.stringify(resp.data))
                     return resolve(resp)
-                  }).catch(err => console.log(err.response))
+                  }).catch(err => {
+                    console.log(`#${storeId} error to create`, err.response.status, err.response.detail)
+                    reject(err)
+                  })
                 } else if (response.status && response.status === 400) {
                     // email adress 
                     reject(response)
