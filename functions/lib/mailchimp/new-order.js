@@ -99,7 +99,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
         mailchimp.get({
           path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
         }).then(resp => {
-          console.log('get order', resp.response)
+          console.log('get order', orderId, resp.data && resp.data.id)
           const promises = []
           promises.push(mailchimp.patch({
             path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
