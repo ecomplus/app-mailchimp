@@ -121,9 +121,6 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
             // not found
             // not exist
             // create new order
-            if (storeId == 51292) {
-              console.log('Error #51292', error.response)
-            }
             if (error.response) {
               const { response } = error
               if (response.status && response.status === 404) {
