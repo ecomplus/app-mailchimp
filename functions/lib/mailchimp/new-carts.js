@@ -107,7 +107,7 @@ module.exports = (cartId, storeId, appSdk, configObj) => {
                     }))
                   }
                   return Promise.all(promises).then(resp => {
-                    console.log('Created cart', JSON.stringify(resp.data))
+                    console.log('Created cart', resp.id)
                     return resolve(resp)
                   }).catch(err => {
                     console.log(`#${storeId} error to create`, err.response.status, err.response.detail)
