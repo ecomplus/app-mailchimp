@@ -42,7 +42,7 @@ exports.post = ({ appSdk }, req, res) => {
           .then(({ response }) => response.data)
 
         // const promises = []
-        return sendMessageTopic('produto', { result, store, storeId, configObj, appSdk })
+        return sendMessageTopic('produto', { result, store, storeId, configObj })
           .then(() => {
             return res.sendStatus(200)
           })

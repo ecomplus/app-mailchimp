@@ -1,18 +1,27 @@
-const getAppData = require('./../../lib/store-api/get-app-data')
-const updateAppData = require('./../../lib/store-api/update-app-data')
+const admin = require('firebase-admin')
+const { setup } = require('@ecomplus/application-sdk')
+
 const createOrUpdate = require('./../../lib/mailchimp/new-product')
+
+const getAppSdk = () => {
+  return new Promise(resolve => {
+    setup(null, true, admin.firestore())
+      .then(appSdk => resolve(appSdk))
+  })
+}
 
 module.exports = async (
     { 
         result, 
         store, 
         storeId, 
-        configObj, 
-        appSdk 
+        configObj,
     },
     context
 ) => {
   console.log('>> Exec Event ', context.eventId)
+  const appSdk = await getAppSdk(admin)
+
   return appSdk.getAuth(storeId)
     .then(async (auth) => {
         const appClient = { appSdk, storeId, auth }
@@ -37,5 +46,8 @@ module.exports = async (
       } else {
         throw err
       }
+    })
+    .then(() => {
+      console.log('>> End Event ', context.eventId)
     })
 }
