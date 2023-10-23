@@ -3,7 +3,21 @@
 /* eslint-disable promise/no-nesting */
 // read configured E-Com Plus app data
 const getAppData = require('../../lib/store-api/get-app-data')
-const createOrUpdate = require('../../lib/mailchimp/new-product')
+const PubSub = require('@google-cloud/pubsub').PubSub
+const getPubSubTopic = require('../../lib/pubsub/create-topic').getPubSubTopic
+
+const sendMessageTopic = async (eventName, json) => {
+  const topicName = getPubSubTopic(eventName)
+  const messageId = await new PubSub()
+    .topic(topicName)
+    .publishMessage({ json })
+
+  console.log('>> MessageId: ', messageId, ' Topic: ', topicName)
+
+  return Promise.resolve(200)
+}
+
+//const createOrUpdate = require('../../lib/mailchimp/new-product')
 
 exports.post = ({ appSdk }, req, res) => {
   const storeId = parseInt(req.get('X-Store-Id') || req.query.store_id, 10)
@@ -28,15 +42,15 @@ exports.post = ({ appSdk }, req, res) => {
           .then(({ response }) => response.data)
 
         // const promises = []
-        for (let i = 0; i < result.length; i++) {
-          try {
-            console.log('Sending:', result.length, 'index:', i)
-            const response = await createOrUpdate(result[i], store, storeId, configObj, appSdk)
-            console.log(`Product ${result[i]._id} sync successfully | #${storeId}`, response.data)
-          } catch (err) {
-            console.error(`Product ${result[i]._id} sync failed | #${storeId}`, err)
-          }
-        }
+        return sendMessageTopic('produto', { result, store, storeId, configObj })
+          .then(() => {
+            return res.sendStatus(200)
+          })
+          .catch(err => {
+            err.storeId = storeId
+            console.error(err)
+            return res.sendStatus(502)
+          })
 
         /* Promise
           .all(promises)

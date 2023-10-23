@@ -7,6 +7,7 @@ const recursiveReadDir = require('./lib/recursive-read-dir')
 // Firebase SDKs to setup cloud functions and access Firestore database
 const admin = require('firebase-admin')
 const functions = require('firebase-functions')
+const handleEventMailchimpProduct = require('./lib/pubsub/webhook-product')
 
 admin.initializeApp()
 
@@ -145,3 +146,6 @@ exports.updateTokens = functions.pubsub.schedule(cron).onRun(() => {
   })
 })
 console.log(`-- Sheduled update E-Com Plus tokens '${cron}'`)
+
+exports.onMailchimpProductEvents = require('./lib/pubsub/create-topic')
+  .createEventsFunction('produto', handleEventMailchimpProduct)
