@@ -34,7 +34,7 @@ module.exports = async (
             try {
                 console.log('Sending:', result.length, 'index:', i)
                 const response = await createOrUpdate(result[i], store, storeId, configObj, appSdk)
-                console.log(`Product ${result[i]._id} sync successfully | #${storeId}`, response.data)
+                console.log(`Product ${result[i]._id} sync successfully | #${storeId}`, response.data && response.data.id)
             } catch (err) {
                 console.error(`Product ${result[i]._id} sync failed | #${storeId}`, err)
             }
