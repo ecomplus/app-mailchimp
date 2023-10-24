@@ -101,7 +101,13 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
                 }).then(resp => {
                   //console.log(`Create new product ${productBody._id} | #${storeId}`)
                   return resolve(resp)
-                }).catch(reject)
+                }).catch(erro => {
+                  if (erro.response) {
+                    console.log('erro na criação')
+                    console.log(erro.response.status, erro.response.title, erro.response.detail)
+                  }
+                  reject(erro)
+                })
               } else {
                 reject(response)
               }
