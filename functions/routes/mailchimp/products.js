@@ -6,13 +6,25 @@ const getAppData = require('../../lib/store-api/get-app-data')
 const PubSub = require('@google-cloud/pubsub').PubSub
 const getPubSubTopic = require('../../lib/pubsub/create-topic').getPubSubTopic
 
-const sendMessageTopic = async (eventName, json) => {
-  const topicName = getPubSubTopic(eventName)
-  const messageId = await new PubSub()
-    .topic(topicName)
-    .publishMessage({ json })
+const chunk = (cards) => {
+  var chunkArray = [];
+  for(var i = 0; i < cards.length; i += 90) {
+      chunkArray.push(cards.slice(i, i+90));
+  }
+  return chunkArray;
+}
 
-  console.log('>> MessageId: ', messageId, ' Topic: ', topicName)
+const sendMessageTopic = async (eventName, json) => {
+  const productsChunk = chunk(json.result)
+  for (let index = 0; index < productsChunk.length; index++) {
+    json.result = productsChunk[index]
+    const topicName = getPubSubTopic(eventName)
+    const messageId = await new PubSub()
+      .topic(topicName)
+      .publishMessage({ json })
+
+    console.log('>> MessageId: ', messageId, ' Topic: ', topicName)
+  }
 
   return Promise.resolve(200)
 }
