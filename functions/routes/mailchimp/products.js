@@ -8,8 +8,8 @@ const getPubSubTopic = require('../../lib/pubsub/create-topic').getPubSubTopic
 
 const chunk = (cards) => {
   var chunkArray = [];
-  for(var i = 0; i < cards.length; i += 40) {
-      chunkArray.push(cards.slice(i, i+40));
+  for(var i = 0; i < cards.length; i += 20) {
+      chunkArray.push(cards.slice(i, i+20));
   }
   return chunkArray;
 }
