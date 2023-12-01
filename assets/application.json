@@ -80,6 +80,15 @@
       },
       "hide": false
     },
+    "mc_campaign_order_utm": {
+      "schema": {
+        "type": "boolean",
+        "default": false,
+        "title": "Buscar id da campanha no utm",
+        "description": "Caso ative, utm source precisará ser mailchimp e utm term o id da campanha"
+      },
+      "hide": false
+    },
     "customer_tag": {
       "schema": {
         "title": "Filtro de clientes por tag",
