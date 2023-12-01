@@ -75,9 +75,11 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
             postal_code: addressTo.zip
           }
         }
-
-        if (configObj.mc_campaign_order) {
+        const termCampaign = orderBody.utm && orderBody.utm.term
+        if (configObj.mc_campaign_order && (!configObj.mc_campaign_order_utm || !termCampaign)) {
           data.campaign_id = configObj.mc_campaign_order
+        } else if (configObj.mc_campaign_order_utm && termCampaign) {
+          data.campaign_id = termCampaign
         }
 
         const { items } = orderBody
