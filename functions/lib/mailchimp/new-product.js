@@ -28,8 +28,18 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
 
         // product img
         if (pictures && pictures.length) {
-          pictures.forEach(({ normal }) => {
-            if (normal && normal.url) {
+          pictures.forEach(({ normal, zoom }) => {
+            if (zoom && zoom.url) {
+              data.images.push({
+                id: randomObjectId(),
+                url: zoom.url
+              })
+
+              // save first image has default
+              if (data.image_url === '') {
+                data.image_url = zoom.url
+              }
+            } else if (normal && normal.url) {
               data.images.push({
                 id: randomObjectId(),
                 url: normal.url
