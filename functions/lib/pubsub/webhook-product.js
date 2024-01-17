@@ -30,7 +30,17 @@ module.exports = async (
             error.code = 'Unauthorized'
             throw error
         }
-        for (let i = 0; i < result.length; i++) {
+        const documentRef = admin.firestore().doc(`products_to_add/${storeId}`)
+        await documentRef.set({
+          storeId,
+          result,
+          store,
+          pointEntries,
+          configObj,
+          queuedAt: admin.firestore.Timestamp.now()
+        })
+        console.log('saving in firestore list of products', documentRef)
+        /* for (let i = 0; i < result.length; i++) {
             try {
                 console.log('Sending:', result.length, 'index:', i)
                 const response = await createOrUpdate(result[i], store, storeId, configObj, appSdk)
@@ -38,7 +48,7 @@ module.exports = async (
             } catch (err) {
                 console.error(`Product ${result[i]._id} sync failed | #${storeId}`, err)
             }
-        } 
+        } */ 
     })
     .catch((err) => {
       if (err.appWithoutAuth) {
