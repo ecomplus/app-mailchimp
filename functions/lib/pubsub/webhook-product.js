@@ -35,7 +35,6 @@ module.exports = async (
           storeId,
           result,
           store,
-          pointEntries,
           configObj,
           queuedAt: admin.firestore.Timestamp.now()
         })
