@@ -149,3 +149,9 @@ console.log(`-- Sheduled update E-Com Plus tokens '${cron}'`)
 
 exports.onMailchimpProductEvents = require('./lib/pubsub/create-topic')
   .createEventsFunction('produto', handleEventMailchimpProduct)
+
+// create product from collection
+const createProduct = require('./lib/cron/export-product')
+const queueCreateProduct = 'every 15 mins'
+exports.onMailchimpSendProductEvents = functions.pubsub.schedule(queueCreateProduct).onRun(createProduct)
+console.log(`-- Sheduled active access from mailchimp '${queueCreateProduct}'`)

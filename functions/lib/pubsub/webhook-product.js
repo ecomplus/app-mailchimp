@@ -1,8 +1,6 @@
 const admin = require('firebase-admin')
 const { setup } = require('@ecomplus/application-sdk')
 
-const createOrUpdate = require('./../../lib/mailchimp/new-product')
-
 const getAppSdk = () => {
   return new Promise(resolve => {
     setup(null, true, admin.firestore())
@@ -38,7 +36,7 @@ module.exports = async (
           configObj,
           queuedAt: admin.firestore.Timestamp.now()
         })
-        console.log('saving in firestore list of products', documentRef)
+        console.log('saving in firestore list of products', documentRef, result.length)
         /* for (let i = 0; i < result.length; i++) {
             try {
                 console.log('Sending:', result.length, 'index:', i)
