@@ -86,6 +86,7 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
 
           .then(({ data }) => {
             // exist, just update
+            console.log('editando', productBody._id)
             return mailchimp.patch({
               path: `/ecommerce/stores/${configObj.mc_store_id}/products/${productBody._id}`,
               data

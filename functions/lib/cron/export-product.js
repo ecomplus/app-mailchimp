@@ -53,7 +53,7 @@ module.exports = async () => {
                     configObj,
                     queuedAt: admin.firestore.Timestamp.now()
                   })
-                  console.log(`#${storeId} saving in firestore list of products after create or update`, documentRef, result.length) 
+                  console.log(`#${storeId} saving in firestore list of products after create or update`, result.length) 
               } catch (err) {
                   console.error(`Product ${products[i]._id} sync failed | #${storeId}`, err)
               }
