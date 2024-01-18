@@ -68,7 +68,7 @@ module.exports = async () => {
         }
       })
       .then(() => {
-        console.log('>> End Event ', context.eventId)
+        console.log('>> End Event exportation')
       })
   }
 }
