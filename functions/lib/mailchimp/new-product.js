@@ -15,10 +15,13 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
         const product = response.data
         // mailchimp product model
         const { name, sku, variations, pictures } = product
-        const { homepage } = storeData
+        let { homepage } = storeData
+        if (!homepage) {
+          homepage = `https://${storeData.domain}`
+        }
         const data = {
           title: name,
-          url: `${homepage}/${sku}`,
+          url: `${homepage}/${product.slug}`,
           description: product.short_description || name,
           images: [],
           published_at_foreign: new Date(),
@@ -84,19 +87,20 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
           path: `/ecommerce/stores/${configObj.mc_store_id}/products/${productBody._id}`
         })
 
-          .then(({ data }) => {
+          .then((response) => {
             // exist, just update
             console.log('editando', productBody._id)
+            console.log('body edit', JSON.stringify(data))
             return mailchimp.patch({
               path: `/ecommerce/stores/${configObj.mc_store_id}/products/${productBody._id}`,
               data
             })
           })
 
-          .then(({ data }) => {
+          .then((response) => {
             //const resp = `Update product ${productBody._id} | #${storeId}`
             //console.log(resp)
-            return resolve(data)
+            return resolve(response.data)
           })
 
           .catch(error => {
