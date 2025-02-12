@@ -34,7 +34,7 @@ exports.post = ({ appSdk }, req, res) => {
       if (!listId) {
         try {
           // todo
-          const list = await newList()
+          const list = await newList(storeId, configObj, appSdk)
           listId = list.id
         } catch (error) {
           console.log('Create list error', error.message)
