@@ -57,7 +57,7 @@ exports.post = ({ appSdk }, req, res) => {
               .apiRequest(storeId, '/stores/me')
               .then(({ response }) => {
                 const storeData = response.data
-                const productBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
+                const productBody = Object.assign({ _id: productId }, trigger.body)
                 return newProduct(productBody, storeData, storeId, appData, appSdk)
               })
           }
