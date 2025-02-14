@@ -45,18 +45,22 @@ exports.post = ({ appSdk }, req, res) => {
         case 'orders':
           const orderId = trigger.inserted_id || trigger.resource_id
           if (orderId) {
-            console.log(`Sending new order ${orderId} for #${storeId}`)
+            console.log(`Sending order ${orderId} for #${storeId}`)
             promise = newOrder(orderId, storeId, appSdk, appData)
           }
           break
         case 'products':
-          promise = appSdk
-            .apiRequest(storeId, '/stores/me')
-            .then(({ response }) => {
-              const storeData = response.data
-              const productBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
-              return newProduct(productBody, storeData, storeId, appData, appSdk)
-            })
+          const productId = trigger.inserted_id || trigger.resource_id
+          if (productId) {
+            console.log(`Sending product ${productId} for #${storeId}`)
+            promise = appSdk
+              .apiRequest(storeId, '/stores/me')
+              .then(({ response }) => {
+                const storeData = response.data
+                const productBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
+                return newProduct(productBody, storeData, storeId, appData, appSdk)
+              })
+          }
           break
         case 'customers':
           // const customerBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)

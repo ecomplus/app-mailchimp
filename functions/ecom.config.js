@@ -249,7 +249,15 @@ procedures.push({
       resource: 'products',
       action: 'create'
     },
-
+    {
+      resource: 'products',
+      field: 'price',
+    },
+    {
+      resource: 'products',
+      subresource: 'variations',
+      field: 'price',
+    },
     // Receive notifications when cart is created:
     {
       resource: 'carts',
@@ -260,19 +268,16 @@ procedures.push({
       resource: 'carts',
       field: 'completed',
     },
-
     // Receive notifications when order change status:
     {
       resource: 'orders',
       field: 'financial_status',
     },
-
     // Receive notifications when customer is created:
     {
       resource: 'customers',
       action: 'create',
     },
-
     // Feel free to create custom combinations with any Store API resource, subresource, action and field.
   ],
 
