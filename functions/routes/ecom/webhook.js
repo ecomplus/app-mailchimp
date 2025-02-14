@@ -41,13 +41,14 @@ exports.post = ({ appSdk }, req, res) => {
           if (cartId) {
             promise = newCart(cartId, storeId, appSdk, appData)
           }
-          break;
+          break
         case 'orders':
           const orderId = trigger.inserted_id || trigger.resource_id
           if (orderId) {
+            console.log(`Sending new order ${orderId} for #${storeId}`)
             promise = newOrder(orderId, storeId, appSdk, appData)
           }
-          break;
+          break
         case 'products':
           promise = appSdk
             .apiRequest(storeId, '/stores/me')
@@ -56,7 +57,7 @@ exports.post = ({ appSdk }, req, res) => {
               const productBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
               return newProduct(productBody, storeData, storeId, appData, appSdk)
             })
-          break;
+          break
         case 'customers':
           // const customerBody = Object.assign({ _id: trigger.inserted_id }, trigger.body)
           // promise = newCustomer(customerBody, storeId, appData)
@@ -66,9 +67,8 @@ exports.post = ({ appSdk }, req, res) => {
               const customerData = response.data
               return newCustomer(customerData, storeId, appData)
             })
-          break;
+          break
         default:
-          break;
       }
 
       return promise

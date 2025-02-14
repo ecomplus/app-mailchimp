@@ -2,8 +2,8 @@
 const axios = require('axios')
 
 class Mailchimp {
-  constructor(apiKey) {
-    if (!/.+\-.+/.test(apiKey)) {
+  constructor (apiKey) {
+    if (!/.+-.+/.test(apiKey)) {
       throw new Error('Missing or invalid apiKey: ' + apiKey)
     }
 
@@ -14,7 +14,7 @@ class Mailchimp {
         password: apiKey
       },
       headers: {
-        'User-Agent' : 'e-com.plus app-mailchimp'
+        'User-Agent': 'e-com.plus app-mailchimp'
       }
     })
   }

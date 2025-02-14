@@ -14,7 +14,7 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
         // ecomplus product
         const product = response.data
         // mailchimp product model
-        const { name, sku, variations, pictures } = product
+        const { name, variations, pictures } = product
         let { homepage } = storeData
         if (!homepage) {
           homepage = `https://${storeData.domain}`
@@ -97,8 +97,6 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
           })
 
           .then((response) => {
-            //const resp = `Update product ${productBody._id} | #${storeId}`
-            //console.log(resp)
             return resolve(response.data)
           })
 
@@ -113,7 +111,6 @@ module.exports = (productBody, storeData, storeId, configObj, appSdk) => {
                   path: `/ecommerce/stores/${configObj.mc_store_id}/products`,
                   data
                 }).then(resp => {
-                  //console.log(`Create new product ${productBody._id} | #${storeId}`)
                   return resolve(resp)
                 }).catch(erro => {
                   if (erro.response) {

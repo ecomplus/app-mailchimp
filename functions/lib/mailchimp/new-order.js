@@ -1,5 +1,7 @@
 /* eslint-disable promise/catch-or-return */
 'use strict'
+
+const md5 = require('md5')
 const { lineAddress } = require('@ecomplus/utils')
 const Mailchimp = require('./client')
 const parseTag = require('./parse-tag')
@@ -20,8 +22,8 @@ const financialStatus = (status) => {
     case 'refunded':
     case 'partially_refunded':
       return 'refunded'
-    default: 'pending'
-      break;
+    default:
+      return 'pending'
   }
 }
 
@@ -33,8 +35,8 @@ const tagStatus = (status) => {
       return 'open_order'
     case 'cancelled':
       return 'canceled_order'
-    default: 'pending'
-      break;
+    default:
+      return 'pending'
   }
 }
 
@@ -99,7 +101,7 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
         const mailchimp = new Mailchimp(configObj.mc_api_key)
 
         mailchimp.get({
-          path: `/ecommerce/stores/${storeId}/orders/${orderId}`,
+          path: `/ecommerce/stores/${storeId}/orders/${orderId}`
         }).then(resp => {
           console.log('get order', orderId, resp.data && resp.data.id)
           const promises = []
@@ -111,7 +113,12 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
           if (tagName) {
             promises.push(mailchimp.post({
               path: `/lists/${configObj.mc_store_list}/members/${md5(customer.main_email)}/tags`,
-              data: {"tags": [{"name": tagName, "status": "active"}]}
+              data: {
+                tags: [{
+                  name: tagName,
+                  status: 'active'
+                }]
+              }
             }))
           }
           return Promise.all(promises).then(response => {
@@ -119,7 +126,8 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
             return resolve(response)
           })
         })
-        .catch(error => {
+
+          .catch(error => {
             // not found
             // not exist
             // create new order
@@ -135,17 +143,19 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
                 if (tagName) {
                   promises.push(mailchimp.post({
                     path: `/lists/${configObj.mc_store_list}/members/${md5(customer.main_email)}/tags`,
-                    data: {"tags": [{"name": tagName, "status": "active"}]}
+                    data: {
+                      tags: [{
+                        name: tagName,
+                        status: 'active'
+                      }]
+                    }
                   }))
                 }
                 return Promise.all(promises).then(resp => {
                   console.log(`Create new order ${orderBody._id} | #${storeId}`)
                   return resolve(resp)
-                }).catch(err => { 
+                }).catch(err => {
                   const { response } = err
-                  if (storeId == 51292) {
-                    console.log('Error at store #51292', response.status, response.detail, JSON.stringify(response.errors))
-                  }
                   if (response.data && response.data.errors) {
                     console.error('[!] INFO order: ', storeId, JSON.stringify(response.data.errors, undefined, 2))
                   }
@@ -155,7 +165,6 @@ module.exports = (orderId, storeId, appSdk, configObj) => {
                   reject(err)
                 })
               } else if (response.status && response.status === 400) {
-                // email adress 
                 reject(response)
               }
             } else {
