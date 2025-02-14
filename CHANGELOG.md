@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/ecomplus/app-mailchimp/compare/v1.1.9...v3.0.0) (2025-02-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ecom-config:** change procedures to get each state of cart
+
+### Features
+
+* add pubsub to queue products to avoid timeout ([0b3e25a](https://github.com/ecomplus/app-mailchimp/commit/0b3e25ad532630cf072d068a8d14c232466143b1))
+* create route to list all campaigns ([e792781](https://github.com/ecomplus/app-mailchimp/commit/e792781bd1fcab7b0ee819d5b3eb3d0adb80f680))
+
+
+### Bug Fixes
+
+* **deps:** update all non-major ([eb241be](https://github.com/ecomplus/app-mailchimp/commit/eb241be451324f5ef846778ce72fd9095ece647d))
+* **deps:** update all non-major ([f2f79f4](https://github.com/ecomplus/app-mailchimp/commit/f2f79f464ceb0be65cf9f57bee9ab9693b7db96e))
+* **deps:** update all non-major ([ed8b5d3](https://github.com/ecomplus/app-mailchimp/commit/ed8b5d3f63f738d5190a800f38a5d9ce85bd68a0))
+* **deps:** update dependency @google-cloud/pubsub to ^3.7.5 ([f11c745](https://github.com/ecomplus/app-mailchimp/commit/f11c7456157af77d906c1d3fae7fe952fd4839bf))
+* **deps:** update dependency express to v4.19.2 [security] ([5ca150e](https://github.com/ecomplus/app-mailchimp/commit/5ca150e506014f1d68995f04ccf69602d95e6f88))
+* **deps:** update dependency express to v4.20.0 [security] ([a430bd5](https://github.com/ecomplus/app-mailchimp/commit/a430bd5f1a981aab32f5d58c8e94cc4504596256))
+* **deps:** update dependency firebase-functions to ^4.6.0 ([0f0c770](https://github.com/ecomplus/app-mailchimp/commit/0f0c770a5885a92ae79f831fa84f29e341886bac))
+* many (non-sense bugs) fixes on new orders handler ([4c9aa72](https://github.com/ecomplus/app-mailchimp/commit/4c9aa72b2d677f13c365e042371398f41a3f8780))
+* must also receive product update webhooks ([efb9f23](https://github.com/ecomplus/app-mailchimp/commit/efb9f2392f21e9a521a9b517f4e43f46ee31f39d))
+* **new-product:** send data to new update product ([0107e58](https://github.com/ecomplus/app-mailchimp/commit/0107e587ff5e9016f9af9cee22f10c609dbab23f))
+* **parse-tag:** return to module export ([6ba2b7d](https://github.com/ecomplus/app-mailchimp/commit/6ba2b7d7de00859eef12586e5be7d5b5af034e8b))
+* product slug ([ff54ee5](https://github.com/ecomplus/app-mailchimp/commit/ff54ee59ba5c4b60647515a63dbf0da174cd77b5))
+* **webhook:** send order id ([c45167b](https://github.com/ecomplus/app-mailchimp/commit/c45167b9ea08b50e52f18c1e34f91e9221a94262))
+
+
+* **ecom-config:** new config and tag filter by client ([4eed911](https://github.com/ecomplus/app-mailchimp/commit/4eed911835d22ec1eb66c893c22a6f70297b9e47))
+
 ### [1.1.9](https://github.com/ecomplus/app-mailchimp/compare/v1.1.8...v1.1.9) (2022-02-24)
 
 
