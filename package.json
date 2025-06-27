@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/ecomplus/app-mailchimp#readme",
   "dependencies": {
-    "dotenv": "^15.0.1",
+    "dotenv": "^16.6.1",
     "firebase-tools": "^13.29.2",
     "uglify-js": "^3.17.4"
   },
